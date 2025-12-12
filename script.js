@@ -1,7 +1,10 @@
 // =====================================================
 //  LOGIN - index.html
 // =====================================================
-if (window.location.pathname.includes("index.html")) {
+
+// 🔧 FIX IMPORTANTE PARA GITHUB PAGES 🔧
+// GitHub Pages NO usa "index.html" en la URL, así que lo detectamos con .endsWith("/")
+if (window.location.pathname.endsWith("/") || window.location.pathname.includes("index.html")) {
 
     const btnLogin = document.getElementById("btnLogin");
 
