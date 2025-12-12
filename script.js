@@ -1,172 +1,158 @@
-// ==========================================================
-// GUARDAR DATOS DEL USUARIO AL HACER LOGIN
-// ==========================================================
-
-// Esto se ejecuta SOLO en index.html
+// =====================================================
+//  LOGIN - index.html
+// =====================================================
 if (window.location.pathname.includes("index.html")) {
 
-    const continuarBtn = document.getElementById("continuarBtn");
+    const btnLogin = document.getElementById("btnLogin");
 
-    if (continuarBtn) {
-        continuarBtn.addEventListener("click", () => {
-            const nombre = document.getElementById("nombre").value.trim();
-            const apellido = document.getElementById("apellido").value.trim();
+    btnLogin.addEventListener("click", async () => {
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
 
-            if (nombre === "" || apellido === "") {
-                alert("Por favor completa nombre y apellido.");
-                return;
-            }
+        if (nombre === "" || apellido === "") {
+            alert("Por favor completá tu nombre y apellido.");
+            return;
+        }
 
-            const usuario = { nombre, apellido };
+        // 🚀 Simula crear un usuario en backend
+        const userId = Date.now().toString();
 
-            // Guardamos el usuario en LocalStorage
-            localStorage.setItem("usuario", JSON.stringify(usuario));
+        // Guardamos en el navegador
+        localStorage.setItem("userId", userId);
 
-            // Redirigimos a la lista de guardarropas
-            window.location.href = "guardarropas.html";
-        });
-    }
+        // Vamos a la pantalla principal
+        window.location.href = "guardarropas.html";
+    });
 }
 
-
-
-// ==========================================================
-// LISTA DE GUARDARROPAS
-// (guardarropas.html)
-// ==========================================================
-
+// =====================================================
+//  LISTA DE GUARDARROPAS - guardarropas.html
+// =====================================================
 if (window.location.pathname.includes("guardarropas.html")) {
 
     const lista = document.getElementById("listaGuardarropas");
     const btnNuevo = document.getElementById("btnNuevoGuardarropa");
 
-    function cargarGuardarropas() {
-        let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
+    let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
+
+    function mostrarGuardarropas() {
         lista.innerHTML = "";
 
         guardarropas.forEach((g, index) => {
-            const div = document.createElement("div");
-            div.className = "item-guardarropa";
+            const item = document.createElement("div");
+            item.className = "item";
 
-            div.innerHTML = `
-                <span class="nombre-guardarropa" data-index="${index}">${g.nombre}</span>
+            item.innerHTML = `
+                <span class="nombre">${g.nombre}</span>
 
-                <button class="btn-verde" data-ver="${index}">➕</button>
-                <button class="btn-rojo" data-eliminar="${index}">❌</button>
+                <button class="btn-verde" data-index="${index}">
+                    ➕
+                </button>
+
+                <button class="btn-rojo" data-index="${index}">
+                    ❌
+                </button>
             `;
 
-            lista.appendChild(div);
+            lista.appendChild(item);
+        });
+
+        // BOTÓN PARA ENTRAR
+        document.querySelectorAll(".btn-verde").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = e.target.dataset.index;
+                localStorage.setItem("guardarropaSeleccionado", id);
+                window.location.href = "dentrodelguarda.html";
+            });
+        });
+
+        // BOTÓN PARA BORRAR
+        document.querySelectorAll(".btn-rojo").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = e.target.dataset.index;
+                guardarropas.splice(id, 1);
+                localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
+                mostrarGuardarropas();
+            });
         });
     }
 
-    // Crear nuevo guardarropa
     btnNuevo.addEventListener("click", () => {
         const nombre = prompt("Nombre del nuevo guardarropa:");
-
-        if (nombre && nombre.trim() !== "") {
-            let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
-
-            guardarropas.push({
-                nombre,
-                prendas: []
-            });
-
+        if (nombre) {
+            guardarropas.push({ nombre: nombre, prendas: [] });
             localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-            cargarGuardarropas();
+            mostrarGuardarropas();
         }
     });
 
-    // Delegación de eventos
-    lista.addEventListener("click", (e) => {
-        let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
-
-        // ➕ Agregar prendas dentro del guardarropa
-        if (e.target.dataset.ver) {
-            const index = e.target.dataset.ver;
-            localStorage.setItem("guardarropaSeleccionado", index);
-            window.location.href = "dentrodelguarda.html";
-        }
-
-        // ❌ Eliminar
-        if (e.target.dataset.eliminar) {
-            const index = e.target.dataset.eliminar;
-            guardarropas.splice(index, 1);
-            localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-            cargarGuardarropas();
-        }
-
-        // Entrar al guardarropa haciendo clic en el nombre
-        if (e.target.classList.contains("nombre-guardarropa")) {
-            const index = e.target.dataset.index;
-            localStorage.setItem("guardarropaSeleccionado", index);
-            window.location.href = "dentrodelguarda.html";
-        }
-    });
-
-    cargarGuardarropas();
+    mostrarGuardarropas();
 }
 
-
-
-// ==========================================================
-// PANTALLA DENTRO DEL GUARDARROPA
-// (dentrodelguarda.html)
-// ==========================================================
-
+// =====================================================
+//  PRENDAS DEL GUARDARROPAS - dentrodelguarda.html
+// =====================================================
 if (window.location.pathname.includes("dentrodelguarda.html")) {
 
-    const listaPrendas = document.getElementById("listaPrendas");
-    const btnNuevaPrenda = document.getElementById("btnNuevaPrenda");
     const titulo = document.getElementById("tituloGuardarropa");
+    const listaPrendas = document.getElementById("listaPrendas");
+    const btnAgregar = document.getElementById("btnAgregarPrenda");
+    const btnVolver = document.getElementById("btnVolver");
 
     let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
-    let index = localStorage.getItem("guardarropaSeleccionado");
+    const id = localStorage.getItem("guardarropaSeleccionado");
+    const actual = guardarropas[id];
 
-    if (!guardarropas[index]) {
-        alert("Error: guardarropa no encontrado.");
-        window.location.href = "guardarropas.html";
-    }
+    // Mostrar título
+    titulo.textContent = actual.nombre;
 
-    titulo.textContent = guardarropas[index].nombre;
-
-    function cargarPrendas() {
+    function mostrarPrendas() {
         listaPrendas.innerHTML = "";
 
-        guardarropas[index].prendas.forEach((p, i) => {
-            const div = document.createElement("div");
-            div.className = "item-prenda";
+        actual.prendas.forEach((p, index) => {
+            const item = document.createElement("div");
+            item.className = "prenda";
 
-            div.innerHTML = `
-                <span>${p}</span>
-                <button class="btn-cambiar" data-cambiar="${i}">✏️</button>
+            item.innerHTML = `
+                <input class="input-prenda" value="${p}" data-index="${index}" />
+
+                <button class="btn-gris" data-index="${index}">
+                    ✏️
+                </button>
             `;
 
-            listaPrendas.appendChild(div);
+            listaPrendas.appendChild(item);
+        });
+
+        // Evento cambiar nombre
+        document.querySelectorAll(".btn-gris").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const index = e.target.dataset.index;
+                const nuevo = prompt("Nuevo nombre de la prenda:", actual.prendas[index]);
+                if (nuevo) {
+                    actual.prendas[index] = nuevo;
+                    guardarropas[id] = actual;
+                    localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
+                    mostrarPrendas();
+                }
+            });
         });
     }
 
-    btnNuevaPrenda.addEventListener("click", () => {
-        const prenda = prompt("Nombre de la prenda:");
-
-        if (prenda && prenda.trim() !== "") {
-            guardarropas[index].prendas.push(prenda);
+    // Agregar prenda nueva
+    btnAgregar.addEventListener("click", () => {
+        const nueva = prompt("Nombre de la prenda:");
+        if (nueva) {
+            actual.prendas.push(nueva);
+            guardarropas[id] = actual;
             localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-            cargarPrendas();
+            mostrarPrendas();
         }
     });
 
-    listaPrendas.addEventListener("click", (e) => {
-        if (e.target.dataset.cambiar) {
-            const i = e.target.dataset.cambiar;
-            const nueva = prompt("Nuevo nombre:", guardarropas[index].prendas[i]);
-
-            if (nueva && nueva.trim() !== "") {
-                guardarropas[index].prendas[i] = nueva;
-                localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-                cargarPrendas();
-            }
-        }
+    btnVolver.addEventListener("click", () => {
+        window.location.href = "guardarropas.html";
     });
 
-    cargarPrendas();
+    mostrarPrendas();
 }

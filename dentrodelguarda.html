@@ -1,15 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardarropa</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h2 id="title"></h2>
+    <div class="contenedor">
 
-    <div class="list-container" id="items"></div>
+        <!-- Título dinámico, se rellena desde JS -->
+        <h1 id="tituloGuardarropa">Guardarropa</h1>
 
-    <script src="script.js"></script>
-</body>
-</html>
+        <!-- Botón para volver atrás -->
+        <button id="btnVolver" class="btn-secundario">
+        </button>
+
+        <!-- Botón para agregar prendas -->
+        <button id="btnAgregarPrenda" class="btn-principal">
+        </button>
+
+        <hr>
+
+        <!-- Aquí se cargan dinámicamente las prendas -->
+        <div id="listaPrendas" class

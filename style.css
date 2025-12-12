@@ -1,72 +1,125 @@
+/* ---------------------------------------------------
+   ESTILOS GENERALES
+--------------------------------------------------- */
 body {
-    font-family: sans-serif;
-    background: #f4f4f4;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f1f1;
+    margin: 0;
+    padding: 0;
+}
+
+.contenedor {
+    width: 90%;
+    max-width: 500px;
+    margin: 30px auto;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    margin-top: 0;
     text-align: center;
 }
 
-.container {
-    width: 350px;
-    margin: 80px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-
-input {
-    width: 90%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 6px;
-    border: none;
-    background: #e6e6e6;
-}
+/* ---------------------------------------------------
+   BOTONES
+--------------------------------------------------- */
 
 button {
-    margin-top: 20px;
-    padding: 12px 20px;
-    background: #1e3a5f;
-    color: white;
     border: none;
-    border-radius: 6px;
     cursor: pointer;
+    font-size: 16px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    transition: 0.2s;
 }
 
-.list-container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 25px;
-    border-radius: 12px;
-    background: #b5b5b5;
+/* botón verde (agregar / entrar) */
+.btn-principal,
+.btn-verde {
+    background: #30C552;
+    color: white;
 }
 
-.item {
+.btn-principal:hover,
+.btn-verde:hover {
+    background: #27a344;
+}
+
+/* botón rojo (eliminar) */
+.btn-rojo {
+    background: #D74444;
+    color: white;
+}
+
+.btn-rojo:hover {
+    background: #b53535;
+}
+
+/* botón gris (editar nombre) */
+.btn-gris {
+    background: #CCCCCC;
+    color: black;
+}
+
+.btn-gris:hover {
+    background: #b9b9b9;
+}
+
+/* botón volver */
+.btn-secundario {
+    background: #888;
+    color: white;
+}
+
+.btn-secundario:hover {
+    background: #666;
+}
+
+/* ---------------------------------------------------
+   LISTA DE GUARDARROPAS
+--------------------------------------------------- */
+
+.lista .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #a6a6a6;
-    margin: 10px 0;
-    padding: 12px 16px;
+    background: #ececec;
+    padding: 10px;
     border-radius: 8px;
+    margin-bottom: 10px;
 }
 
-.btn-red {
-    background: #c43a3a;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
+.nombre {
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.btn-green {
-    background: #74d87b;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
+/* ---------------------------------------------------
+   PANTALLA DE PRENDAS
+--------------------------------------------------- */
+
+.grid-prendas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.btn-gray {
-    background: #d1d1d1;
-    padding: 6px 12px;
-    border: none;
+.prenda {
+    display: flex;
+    align-items: center;
+    background: #e7e7e7;
+    padding: 10px;
+    border-radius: 8px;
+    gap: 8px;
+}
+
+.input-prenda {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
     border-radius: 6px;
+    border: 1px solid #bbb;
 }
