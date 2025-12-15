@@ -1,125 +1,74 @@
-/* ---------------------------------------------------
-   ESTILOS GENERALES
---------------------------------------------------- */
-body {
+* {
+    box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
-    background: #f1f1f1;
+  }
+  
+  body {
     margin: 0;
-    padding: 0;
-}
-
-.contenedor {
-    width: 90%;
-    max-width: 500px;
-    margin: 30px auto;
+    height: 100vh;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .container {
     background: white;
-    padding: 20px 25px;
+    width: 350px;
+    padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-h1 {
-    margin-top: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     text-align: center;
-}
-
-/* ---------------------------------------------------
-   BOTONES
---------------------------------------------------- */
-
-button {
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    transition: 0.2s;
-}
-
-/* botón verde (agregar / entrar) */
-.btn-principal,
-.btn-verde {
-    background: #30C552;
-    color: white;
-}
-
-.btn-principal:hover,
-.btn-verde:hover {
-    background: #27a344;
-}
-
-/* botón rojo (eliminar) */
-.btn-rojo {
-    background: #D74444;
-    color: white;
-}
-
-.btn-rojo:hover {
-    background: #b53535;
-}
-
-/* botón gris (editar nombre) */
-.btn-gris {
-    background: #CCCCCC;
-    color: black;
-}
-
-.btn-gris:hover {
-    background: #b9b9b9;
-}
-
-/* botón volver */
-.btn-secundario {
-    background: #888;
-    color: white;
-}
-
-.btn-secundario:hover {
-    background: #666;
-}
-
-/* ---------------------------------------------------
-   LISTA DE GUARDARROPAS
---------------------------------------------------- */
-
-.lista .item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #ececec;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    margin: 20px 0 10px;
+  }
+  
+  .google-btn {
+    width: 100%;
     padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.nombre {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* ---------------------------------------------------
-   PANTALLA DE PRENDAS
---------------------------------------------------- */
-
-.grid-prendas {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.prenda {
-    display: flex;
-    align-items: center;
-    background: #e7e7e7;
-    padding: 10px;
-    border-radius: 8px;
-    gap: 8px;
-}
-
-.input-prenda {
-    flex: 1;
-    padding: 8px;
-    font-size: 16px;
+    border: 1px solid #ddd;
+    background: white;
     border-radius: 6px;
-    border: 1px solid #bbb;
-}
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .google-btn img {
+    width: 20px;
+  }
+  
+  .divider {
+    height: 2px;
+    background: #ddd;
+    margin: 20px 0;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #eee;
+  }
+  
+  .continue-btn {
+    width: 100%;
+    padding: 12px;
+    background: #243a5e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
