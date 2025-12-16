@@ -1,74 +1,136 @@
+/* RESET BÁSICO */
 * {
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  
-  body {
-    margin: 0;
-    height: 100vh;
-    background: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .container {
-    background: white;
-    width: 350px;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-  
-  h1 {
-    margin-bottom: 20px;
-  }
-  
-  h2 {
-    margin: 20px 0 10px;
-  }
-  
-  .google-btn {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .google-btn img {
-    width: 20px;
-  }
-  
-  .divider {
-    height: 2px;
-    background: #ddd;
-    margin: 20px 0;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: #eee;
-  }
-  
-  .continue-btn {
-    width: 100%;
-    padding: 12px;
-    background: #243a5e;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #f2f4f7;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.container {
+  background-color: white;
+  width: 360px;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* TÍTULOS */
+h1 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 20px 0 10px;
+  color: #333;
+}
+
+/* BOTÓN GOOGLE */
+#googleBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+#googleBtn:hover {
+  background-color: #f5f5f5;
+}
+
+/* DIVISOR */
+.divider {
+  height: 2px;
+  background-color: #ddd;
+  margin: 20px 0;
+}
+
+/* INPUTS */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #e9ecef;
+  font-size: 14px;
+}
+
+/* BOTÓN PRINCIPAL */
+#continueBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#continueBtn:hover {
+  background-color: #162f6a;
+}
+
+/* botón entrar */
+.btn-verde {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-verde:hover {
+  background: #1d4ed8;
+}
+
+/* botón borrar */
+.btn-rojo {
+  background: #dc2626;
+  color: white;
+}
+
+.btn-rojo:hover {
+  background: #b91c1c;
+}
+
+/* =========================
+   LISTA DE GUARDARROPAS
+========================= */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* cada item */
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* nombre */
+.item .nombre {
+  font-weight: bold;
+  color: #111827;
+}
+
+/* botones juntos */
+.item button {
+  margin-left: 5px;
+}

@@ -1,32 +1,29 @@
 // =====================================================
 //  LOGIN - index.html
 // =====================================================
-
-// 🔧 FIX IMPORTANTE PARA GITHUB PAGES 🔧
-// GitHub Pages NO usa "index.html" en la URL, así que lo detectamos con .endsWith("/")
-if (window.location.pathname.endsWith("/") || window.location.pathname.includes("index.html")) {
-
-    const btnLogin = document.getElementById("btnLogin");
-
-    btnLogin.addEventListener("click", async () => {
-        const nombre = document.getElementById("nombre").value.trim();
-        const apellido = document.getElementById("apellido").value.trim();
-
-        if (nombre === "" || apellido === "") {
-            alert("Por favor completá tu nombre y apellido.");
-            return;
-        }
-
-        // 🚀 Simula crear un usuario en backend
-        const userId = Date.now().toString();
-
-        // Guardamos en el navegador
-        localStorage.setItem("userId", userId);
-
-        // Vamos a la pantalla principal
-        window.location.href = "guardarropas.html";
+if (
+    window.location.pathname.endsWith("/") ||
+    window.location.pathname.includes("index.html")
+  ) {
+    const btnContinuar = document.getElementById("continueBtn");
+  
+    btnContinuar.addEventListener("click", () => {
+      const nombre = document.getElementById("nombre").value.trim();
+      const apellido = document.getElementById("apellido").value.trim();
+  
+      if (nombre === "" || apellido === "") {
+        alert("Por favor completá tu nombre y apellido.");
+        return;
+      }
+  
+      // Simulamos login
+      localStorage.setItem("usuario", nombre + " " + apellido);
+  
+      // Ir a la siguiente pantalla
+      window.location.href = "guardarropas.html";
     });
-}
+  }
+  
 
 // =====================================================
 //  LISTA DE GUARDARROPAS - guardarropas.html
