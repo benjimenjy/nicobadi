@@ -1,13 +1,14 @@
 // =====================================================
-//  LOGIN - index.html
+// LOGIN - index.html
 // =====================================================
 if (
     window.location.pathname.endsWith("/") ||
     window.location.pathname.includes("index.html")
   ) {
+    const btnGoogle = document.getElementById("btnLogin");
     const btnContinuar = document.getElementById("continueBtn");
   
-    btnContinuar.addEventListener("click", () => {
+    function login() {
       const nombre = document.getElementById("nombre").value.trim();
       const apellido = document.getElementById("apellido").value.trim();
   
@@ -16,81 +17,83 @@ if (
         return;
       }
   
-      // Simulamos login
       localStorage.setItem("usuario", nombre + " " + apellido);
-  
-      // Ir a la siguiente pantalla
       window.location.href = "guardarropas.html";
-    });
+    }
+  
+    // Ambos botones hacen lo mismo por ahora
+    btnGoogle.addEventListener("click", login);
+    btnContinuar.addEventListener("click", login);
   }
   
-
-// =====================================================
-//  LISTA DE GUARDARROPAS - guardarropas.html
-// =====================================================
-if (window.location.pathname.includes("guardarropas.html")) {
-
+  // =====================================================
+  // LISTA DE GUARDARROPAS - guardarropas.html
+  // =====================================================
+  if (window.location.pathname.includes("guardarropas.html")) {
+  
     const lista = document.getElementById("listaGuardarropas");
     const btnNuevo = document.getElementById("btnNuevoGuardarropa");
-
+  
     let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
-
+  
     function mostrarGuardarropas() {
-        lista.innerHTML = "";
+      lista.innerHTML = "";
+  
+      guardarropas.forEach((g, index) => {
+        const item = document.createElement("div");
+        item.className = "item";
+  
+        item.innerHTML = `
+    <span class="nombre entrar" data-index="${index}">
+        ${g.nombre}
+    </span>
 
-        guardarropas.forEach((g, index) => {
-            const item = document.createElement("div");
-            item.className = "item";
+    <button class="btn-verde entrar" data-index="${index}">
+        ➕
+    </button>
 
-            item.innerHTML = `
-                <span class="nombre">${g.nombre}</span>
+    <button class="btn-rojo" data-index="${index}">
+        ❌
+    </button>
+`;
 
-                <button class="btn-verde" data-index="${index}">
-                    ➕
-                </button>
-
-                <button class="btn-rojo" data-index="${index}">
-                    ❌
-                </button>
-            `;
-
-            lista.appendChild(item);
-        });
-
-        // BOTÓN PARA ENTRAR
-        document.querySelectorAll(".btn-verde").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const id = e.target.dataset.index;
-                localStorage.setItem("guardarropaSeleccionado", id);
-                window.location.href = "dentrodelguarda.html";
-            });
-        });
-
-        // BOTÓN PARA BORRAR
-        document.querySelectorAll(".btn-rojo").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const id = e.target.dataset.index;
-                guardarropas.splice(id, 1);
-                localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-                mostrarGuardarropas();
-            });
-        });
-    }
-
-    btnNuevo.addEventListener("click", () => {
-        const nombre = prompt("Nombre del nuevo guardarropa:");
-        if (nombre) {
-            guardarropas.push({ nombre: nombre, prendas: [] });
-            localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-            mostrarGuardarropas();
-        }
+  
+        lista.appendChild(item);
+      });
+  
+document.querySelectorAll(".entrar").forEach(elem => {
+    elem.addEventListener("click", (e) => {
+        const id = e.target.dataset.index;
+        localStorage.setItem("guardarropaSeleccionado", id);
+        window.location.href = "dentrodelguarda.html";
     });
+});
 
+  
+      document.querySelectorAll(".btn-rojo").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = e.target.dataset.index;
+          guardarropas.splice(id, 1);
+          localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
+          mostrarGuardarropas();
+        });
+      });
+    }
+  
+    btnNuevo.addEventListener("click", () => {
+      const nombre = prompt("Nombre del nuevo guardarropa:");
+      if (nombre) {
+        guardarropas.push({ nombre, prendas: [] });
+        localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
+        mostrarGuardarropas();
+      }
+    });
+  
     mostrarGuardarropas();
-}
-
-// =====================================================
-//  PRENDAS DEL GUARDARROPAS - dentrodelguarda.html
+  }
+  
+ // =====================================================
+//  PRENDAS DEL GUARDARROPA - dentrodelguardarropa.html
 // =====================================================
 if (window.location.pathname.includes("dentrodelguarda.html")) {
 
@@ -103,34 +106,35 @@ if (window.location.pathname.includes("dentrodelguarda.html")) {
     const id = localStorage.getItem("guardarropaSeleccionado");
     const actual = guardarropas[id];
 
-    // Mostrar título
     titulo.textContent = actual.nombre;
 
     function mostrarPrendas() {
         listaPrendas.innerHTML = "";
 
-        actual.prendas.forEach((p, index) => {
-            const item = document.createElement("div");
-            item.className = "prenda";
+        if (actual.prendas.length === 0) {
+            listaPrendas.innerHTML = "<p>No hay prendas aún</p>";
+            return;
+        }
 
-            item.innerHTML = `
-                <input class="input-prenda" value="${p}" data-index="${index}" />
+        actual.prendas.forEach((prenda, index) => {
+            const div = document.createElement("div");
+            div.className = "prenda";
 
-                <button class="btn-gris" data-index="${index}">
-                    ✏️
-                </button>
+            div.innerHTML = `
+                <span>${prenda}</span>
+                <button class="btn-editar" data-index="${index}">✏️</button>
             `;
 
-            listaPrendas.appendChild(item);
+            listaPrendas.appendChild(div);
         });
 
-        // Evento cambiar nombre
-        document.querySelectorAll(".btn-gris").forEach(btn => {
+        document.querySelectorAll(".btn-editar").forEach(btn => {
             btn.addEventListener("click", (e) => {
-                const index = e.target.dataset.index;
-                const nuevo = prompt("Nuevo nombre de la prenda:", actual.prendas[index]);
+                const i = e.target.dataset.index;
+                const nuevo = prompt("Editar prenda:", actual.prendas[i]);
+
                 if (nuevo) {
-                    actual.prendas[index] = nuevo;
+                    actual.prendas[i] = nuevo;
                     guardarropas[id] = actual;
                     localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
                     mostrarPrendas();
@@ -139,7 +143,6 @@ if (window.location.pathname.includes("dentrodelguarda.html")) {
         });
     }
 
-    // Agregar prenda nueva
     btnAgregar.addEventListener("click", () => {
         const nueva = prompt("Nombre de la prenda:");
         if (nueva) {

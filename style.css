@@ -74,7 +74,7 @@ input {
   width: 100%;
   padding: 12px;
   background-color: #1e3a8a;
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 8px;
   font-size: 15px;
@@ -85,52 +85,142 @@ input {
   background-color: #162f6a;
 }
 
-/* botón entrar */
-.btn-verde {
+/* RESET */
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* BODY */
+body {
+  margin: 0;
+  background: #f4f6fb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* CONTENEDOR GENERAL */
+.container {
+  background: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* TITULOS */
+.titulo {
+  color: #1e40af;
+  margin-bottom: 20px;
+}
+
+/* BOTONES */
+.btn-principal {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
   background: #2563eb;
   color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.btn-verde:hover {
-  background: #1d4ed8;
+.btn-principal:hover {
+  background: #1e40af;
 }
 
-/* botón borrar */
-.btn-rojo {
-  background: #dc2626;
+.btn-verde {
+  background: #22c55e;
+  border: none;
   color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.btn-rojo:hover {
-  background: #b91c1c;
+.btn-rojo {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-/* =========================
-   LISTA DE GUARDARROPAS
-========================= */
+/* LISTA */
 .lista {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-top: 20px;
 }
 
-/* cada item */
+/* ITEM GUARDARROPA */
 .item {
+  background: #eef2ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f9fafb;
-  padding: 10px;
-  border-radius: 8px;
 }
 
-/* nombre */
 .item .nombre {
   font-weight: bold;
-  color: #111827;
+  color: #1e3a8a;
 }
 
-/* botones juntos */
-.item button {
-  margin-left: 5px;
+.nombre {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.nombre:hover {
+  text-decoration: underline;
+}
+
+
+/* ===============================
+   INTERIOR GUARDARROPA
+================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+#tituloGuardarropa {
+  font-size: 22px;
+  color: #1e3a8a;
+  margin: 0;
+}
+
+.prenda {
+  background: #f1f5ff;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.prenda span {
+  font-size: 16px;
+  color: #1e293b;
+}
+
+.btn-editar {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
 }

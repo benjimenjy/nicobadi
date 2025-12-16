@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guardarropa</title>
+    <title>Mi Guardarropa</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="contenedor">
+<div class="contenedor">
 
-        <!-- Título dinámico, se rellena desde JS -->
+    <!-- Header -->
+    <div class="header">
+        <button id="btnVolver" class="btn-secundario">← Volver</button>
         <h1 id="tituloGuardarropa">Guardarropa</h1>
+    </div>
 
-        <!-- Botón para volver atrás -->
-        <button id="btnVolver" class="btn-secundario">
-        </button>
+    <!-- Lista de prendas -->
+    <div id="listaPrendas" class="lista"></div>
 
-        <!-- Botón para agregar prendas -->
-        <button id="btnAgregarPrenda" class="btn-principal">
-        </button>
+    <!-- Botón agregar -->
+    <button id="btnAgregarPrenda" class="btn-principal">
+        + Agregar prenda
+    </button>
 
-        <hr>
+</div>
 
-        <!-- Aquí se cargan dinámicamente las prendas -->
-        <div id="listaPrendas" class
+<script src="script.js"></script>
+</body>
+</html>
