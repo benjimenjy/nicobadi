@@ -40,45 +40,43 @@ if (
       lista.innerHTML = "";
   
       guardarropas.forEach((g, index) => {
-        const item = document.createElement("div");
-        item.className = "item";
+          const item = document.createElement("div");
+          item.className = "item";
   
-        item.innerHTML = `
-    <span class="nombre entrar" data-index="${index}">
-        ${g.nombre}
-    </span>
-
-    <button class="btn-verde entrar" data-index="${index}">
-        ➕
-    </button>
-
-    <button class="btn-rojo" data-index="${index}">
-        ❌
-    </button>
-`;
-
+          item.innerHTML = `
+              <span class="nombre nombre-click" data-index="${index}">
+                  ${g.nombre}
+              </span>
   
-        lista.appendChild(item);
+              <button class="btn-rojo" data-index="${index}">
+                  ❌
+              </button>
+          `;
+  
+          lista.appendChild(item);
       });
   
-document.querySelectorAll(".entrar").forEach(elem => {
-    elem.addEventListener("click", (e) => {
-        const id = e.target.dataset.index;
-        localStorage.setItem("guardarropaSeleccionado", id);
-        window.location.href = "dentrodelguarda.html";
-    });
-});
-
+      // 👉 ENTRAR AL GUARDARROPA AL TOCAR EL NOMBRE
+      document.querySelectorAll(".nombre-click").forEach(nombre => {
+          nombre.addEventListener("click", (e) => {
+              const id = e.target.dataset.index;
+              localStorage.setItem("guardarropaSeleccionado", id);
+              window.location.href = "dentrodelguarda.html";
+          });
+      });
   
+      // 👉 BORRAR GUARDARROPA
       document.querySelectorAll(".btn-rojo").forEach(btn => {
-        btn.addEventListener("click", e => {
-          const id = e.target.dataset.index;
-          guardarropas.splice(id, 1);
-          localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-          mostrarGuardarropas();
-        });
+          btn.addEventListener("click", (e) => {
+              e.stopPropagation(); // evita clicks raros
+              const id = e.target.dataset.index;
+              guardarropas.splice(id, 1);
+              localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
+              mostrarGuardarropas();
+          });
       });
-    }
+  }
+  
   
     btnNuevo.addEventListener("click", () => {
       const nombre = prompt("Nombre del nuevo guardarropa:");
