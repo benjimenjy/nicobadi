@@ -1,98 +1,69 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
+CORS(app)
 
-# -------------------------
-# BASE DE DATOS
-# -------------------------
+DB_NAME = "nicobadi.db"
+
+# ---------------------------
+# CONEXIÓN A LA BASE DE DATOS
+# ---------------------------
 def get_db():
-    return sqlite3.connect("database.db")
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-def init_db():
-    db = get_db()
-    cursor = db.cursor()
+
+# ---------------------------
+# CREAR TABLAS
+# ---------------------------
+def crear_tablas():
+    conn = get_db()
+    cursor = conn.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT
+        nombre TEXT NOT NULL,
+        apellido TEXT NOT NULL
     )
     """)
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS guardarropas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        nombre TEXT
+        nombre TEXT NOT NULL,
+        usuario_id INTEGER,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
     )
     """)
 
-    db.commit()
-    db.close()
-
-init_db()
-
-# -------------------------
-# LOGIN
-# -------------------------
-@app.route("/login", methods=["POST"])
-def login():
-    nombre = request.json["nombre"]
-
-    db = get_db()
-    cursor = db.cursor()
-
-    cursor.execute("SELECT id FROM users WHERE nombre = ?", (nombre,))
-    user = cursor.fetchone()
-
-    if user is None:
-        cursor.execute("INSERT INTO users (nombre) VALUES (?)", (nombre,))
-        db.commit()
-        user_id = cursor.lastrowid
-    else:
-        user_id = user[0]
-
-    db.close()
-
-    return jsonify({"user_id": user_id})
-
-# -------------------------
-# GUARDARROPAS
-# -------------------------
-@app.route("/guardarropas/<int:user_id>")
-def obtener_guardarropas(user_id):
-    db = get_db()
-    cursor = db.cursor()
-
-    cursor.execute(
-        "SELECT id, nombre FROM guardarropas WHERE user_id = ?",
-        (user_id,)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS prendas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        guardarropa_id INTEGER,
+        FOREIGN KEY (guardarropa_id) REFERENCES guardarropas(id)
     )
+    """)
 
-    data = cursor.fetchall()
-    db.close()
-
-    return jsonify(data)
-
-@app.route("/guardarropas", methods=["POST"])
-def crear_guardarropa():
-    user_id = request.json["user_id"]
-    nombre = request.json["nombre"]
-
-    db = get_db()
-    cursor = db.cursor()
-
-    cursor.execute(
-        "INSERT INTO guardarropas (user_id, nombre) VALUES (?, ?)",
-        (user_id, nombre)
-    )
-
-    db.commit()
-    db.close()
-
-    return jsonify({"ok": True})
+    conn.commit()
+    conn.close()
 
 
+# ---------------------------
+# RUTA TEST
+# ---------------------------
+@app.route("/")
+def home():
+    return "Backend Nicobadi funcionando 🚀"
+
+
+# ---------------------------
+# INICIAR APP
+# ---------------------------
 if __name__ == "__main__":
+    crear_tablas()
     app.run(debug=True)
