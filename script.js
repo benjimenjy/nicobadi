@@ -1,159 +1,165 @@
-// =====================================================
-// LOGIN - index.html
-// =====================================================
-if (
-    window.location.pathname.endsWith("/") ||
-    window.location.pathname.includes("index.html")
-  ) {
-    const btnGoogle = document.getElementById("btnLogin");
-    const btnContinuar = document.getElementById("continueBtn");
-  
-    function login() {
-      const nombre = document.getElementById("nombre").value.trim();
-      const apellido = document.getElementById("apellido").value.trim();
-  
-      if (nombre === "" || apellido === "") {
-        alert("Por favor completá tu nombre y apellido.");
-        return;
-      }
-  
-      localStorage.setItem("usuario", nombre + " " + apellido);
-      window.location.href = "guardarropas.html";
+// ================================
+// CONFIG
+// ================================
+const BASE_URL = "http://127.0.0.1:5000";
+
+// Helper fetch
+async function api(path, method = "GET", body) {
+    const opts = {
+        method,
+        headers: { "Content-Type": "application/json" }
+    };
+    if (body) opts.body = JSON.stringify(body);
+
+    const res = await fetch(BASE_URL + path, opts);
+    if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(`HTTP ${res.status} - ${txt}`);
     }
-  
-    // Ambos botones hacen lo mismo por ahora
-    btnGoogle.addEventListener("click", login);
-    btnContinuar.addEventListener("click", login);
-  }
-  
-  // =====================================================
-  // LISTA DE GUARDARROPAS - guardarropas.html
-  // =====================================================
-  if (window.location.pathname.includes("guardarropas.html")) {
-  
-    const lista = document.getElementById("listaGuardarropas");
-    const btnNuevo = document.getElementById("btnNuevoGuardarropa");
-  
-    let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
-  
-    function mostrarGuardarropas() {
-      lista.innerHTML = "";
-  
-      guardarropas.forEach((g, index) => {
-          const item = document.createElement("div");
-          item.className = "item";
-  
-          item.innerHTML = `
-              <span class="nombre nombre-click" data-index="${index}">
-                  ${g.nombre}
-              </span>
-  
-              <button class="btn-rojo" data-index="${index}">
-                  ❌
-              </button>
-          `;
-  
-          lista.appendChild(item);
-      });
-  
-      // 👉 ENTRAR AL GUARDARROPA AL TOCAR EL NOMBRE
-      document.querySelectorAll(".nombre-click").forEach(nombre => {
-          nombre.addEventListener("click", (e) => {
-              const id = e.target.dataset.index;
-              localStorage.setItem("guardarropaSeleccionado", id);
-              window.location.href = "dentrodelguarda.html";
-          });
-      });
-  
-      // 👉 BORRAR GUARDARROPA
-      document.querySelectorAll(".btn-rojo").forEach(btn => {
-          btn.addEventListener("click", (e) => {
-              e.stopPropagation(); // evita clicks raros
-              const id = e.target.dataset.index;
-              guardarropas.splice(id, 1);
-              localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-              mostrarGuardarropas();
-          });
-      });
-  }
-  
-  
-    btnNuevo.addEventListener("click", () => {
-      const nombre = prompt("Nombre del nuevo guardarropa:");
-      if (nombre) {
-        guardarropas.push({ nombre, prendas: [] });
-        localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-        mostrarGuardarropas();
-      }
-    });
-  
-    mostrarGuardarropas();
-  }
-  
- // =====================================================
-//  PRENDAS DEL GUARDARROPA - dentrodelguardarropa.html
-// =====================================================
-if (window.location.pathname.includes("dentrodelguarda.html")) {
+    return res.json();
+}
 
-    const titulo = document.getElementById("tituloGuardarropa");
-    const listaPrendas = document.getElementById("listaPrendas");
-    const btnAgregar = document.getElementById("btnAgregarPrenda");
-    const btnVolver = document.getElementById("btnVolver");
+// ================================
+// LOGIN - index.html
+// ================================
+if (window.location.pathname.includes("index.html")) {
 
-    let guardarropas = JSON.parse(localStorage.getItem("guardarropas")) || [];
-    const id = localStorage.getItem("guardarropaSeleccionado");
-    const actual = guardarropas[id];
+    const btn = document.getElementById("continueBtn");
 
-    titulo.textContent = actual.nombre;
+    btn.addEventListener("click", async () => {
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
 
-    function mostrarPrendas() {
-        listaPrendas.innerHTML = "";
-
-        if (actual.prendas.length === 0) {
-            listaPrendas.innerHTML = "<p>No hay prendas aún</p>";
+        if (!nombre || !apellido) {
+            alert("Completá nombre y apellido");
             return;
         }
 
-        actual.prendas.forEach((prenda, index) => {
+        try {
+            const data = await api("/login", "POST", { nombre, apellido });
+
+            // CLAVE ÚNICA
+            localStorage.setItem("user_id", data.user_id);
+
+            window.location.href = "guardarropas.html";
+        } catch (err) {
+            alert("Error login: " + err.message);
+        }
+    });
+}
+
+// ================================
+// GUARDARROPAS - guardarropas.html
+// ================================
+if (window.location.pathname.includes("guardarropas.html")) {
+
+    const lista = document.getElementById("listaGuardarropas");
+    const btnNuevo = document.getElementById("btnNuevoGuardarropa");
+
+    async function cargar() {
+        const userId = localStorage.getItem("user_id");
+        if (!userId) {
+            window.location.href = "index.html";
+            return;
+        }
+
+        const guardarropas = await api(`/guardarropas?user_id=${userId}`);
+        lista.innerHTML = "";
+
+        guardarropas.forEach(g => {
             const div = document.createElement("div");
-            div.className = "prenda";
-
+            div.className = "item";
             div.innerHTML = `
-                <span>${prenda}</span>
-                <button class="btn-editar" data-index="${index}">✏️</button>
+                <span class="nombre link" data-id="${g.id}">${g.nombre}</span>
+                <button class="btn-rojo" data-id="${g.id}">❌</button>
             `;
-
-            listaPrendas.appendChild(div);
+            lista.appendChild(div);
         });
 
-        document.querySelectorAll(".btn-editar").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const i = e.target.dataset.index;
-                const nuevo = prompt("Editar prenda:", actual.prendas[i]);
+        document.querySelectorAll(".nombre.link").forEach(el => {
+            el.onclick = e => {
+                localStorage.setItem("guardarropaSeleccionado", e.target.dataset.id);
+                window.location.href = "dentrodelguarda.html";
+            };
+        });
 
-                if (nuevo) {
-                    actual.prendas[i] = nuevo;
-                    guardarropas[id] = actual;
-                    localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-                    mostrarPrendas();
-                }
-            });
+        document.querySelectorAll(".btn-rojo").forEach(btn => {
+            btn.onclick = async e => {
+                if (!confirm("¿Borrar guardarropa?")) return;
+                await api(`/guardarropas/${e.target.dataset.id}`, "DELETE");
+                cargar();
+            };
         });
     }
 
-    btnAgregar.addEventListener("click", () => {
-        const nueva = prompt("Nombre de la prenda:");
-        if (nueva) {
-            actual.prendas.push(nueva);
-            guardarropas[id] = actual;
-            localStorage.setItem("guardarropas", JSON.stringify(guardarropas));
-            mostrarPrendas();
-        }
-    });
+    btnNuevo.onclick = async () => {
+        const nombre = prompt("Nombre del guardarropa:");
+        if (!nombre) return;
+        const userId = localStorage.getItem("user_id");
+        await api("/guardarropas", "POST", { user_id: userId, nombre });
+        cargar();
+    };
 
-    btnVolver.addEventListener("click", () => {
+    cargar();
+}
+
+// ================================
+// DENTRO DEL GUARDARROPA
+// ================================
+if (window.location.pathname.includes("dentrodelguarda.html")) {
+
+    const titulo = document.getElementById("tituloGuardarropa");
+    const lista = document.getElementById("listaPrendas");
+    const btnAgregar = document.getElementById("btnAgregarPrenda");
+    const btnVolver = document.getElementById("btnVolver");
+
+    const gid = localStorage.getItem("guardarropaSeleccionado");
+    if (!gid) window.location.href = "guardarropas.html";
+
+    async function cargar() {
+        const prendas = await api(`/guardarropas/${gid}/prendas`);
+        titulo.textContent = "Guardarropa";
+
+        lista.innerHTML = "";
+        prendas.forEach(p => {
+            const div = document.createElement("div");
+            div.className = "prenda";
+            div.innerHTML = `
+                <span>${p.nombre}</span>
+                <button data-id="${p.id}" class="edit">✏️</button>
+                <button data-id="${p.id}" class="del">🗑️</button>
+            `;
+            lista.appendChild(div);
+        });
+
+        document.querySelectorAll(".edit").forEach(b => {
+            b.onclick = async e => {
+                const nuevo = prompt("Nuevo nombre:");
+                if (!nuevo) return;
+                await api(`/prendas/${e.target.dataset.id}`, "PUT", { nombre: nuevo });
+                cargar();
+            };
+        });
+
+        document.querySelectorAll(".del").forEach(b => {
+            b.onclick = async e => {
+                if (!confirm("¿Borrar prenda?")) return;
+                await api(`/prendas/${e.target.dataset.id}`, "DELETE");
+                cargar();
+            };
+        });
+    }
+
+    btnAgregar.onclick = async () => {
+        const nombre = prompt("Nombre de prenda:");
+        if (!nombre) return;
+        await api(`/guardarropas/${gid}/prendas`, "POST", { nombre });
+        cargar();
+    };
+
+    btnVolver.onclick = () => {
         window.location.href = "guardarropas.html";
-    });
+    };
 
-    mostrarPrendas();
+    cargar();
 }
